@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../src/routes/mail/index.ts"],"names":[],"mappings":";;;;;AAAA,sDAA8B;AAC9B,iDAA+C;AAE/C,MAAM,MAAM,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAC;AAChC,MAAM,UAAU,GAAG,OAAO,CAAC;AAE3B,MAAM,CAAC,GAAG,CAAC,UAAU,EAAE,IAAA,0BAAY,GAAE,CAAC,CAAC;AAEvC,MAAM,MAAM,GAAG;IACd,MAAM;IACN,UAAU;CACV,CAAC;AAEF,kBAAe,MAAM,CAAC"}
