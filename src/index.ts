@@ -8,7 +8,7 @@ const app = express();
 
 const allowedOrigins = [
 	"http://localhost:3000",
-	"https://www.magnuscit.live/",
+	"https://www.magnuscit.live",
 ];
 
 const corsOptions = {

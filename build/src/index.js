@@ -11,7 +11,7 @@ const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const app = (0, express_1.default)();
 const allowedOrigins = [
     "http://localhost:3000",
-    "https://www.magnuscit.live/",
+    "https://www.magnuscit.live",
 ];
 const corsOptions = {
     origin: allowedOrigins,
