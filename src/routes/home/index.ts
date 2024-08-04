@@ -1,5 +1,5 @@
 import express from "express";
-import { Home } from "src/controllers";
+import { Home } from "../../controllers";
 
 const router = express.Router();
 const BASE_ROUTE = "/";

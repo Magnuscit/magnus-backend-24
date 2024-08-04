@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const constants_1 = require("../config/constants");
-const index_1 = require("./routes/index");
+const routes_1 = require("./routes");
 const app = (0, express_1.default)();
 const allowedOrigins = [
     "http://localhost:3000",
@@ -20,7 +20,8 @@ const corsOptions = {
 };
 app.use((0, cors_1.default)(corsOptions));
 app.use(express_1.default.json());
-app.use(index_1.Home.BASE_ROUTE, index_1.Home.router);
+app.use(routes_1.Home.BASE_ROUTE, routes_1.Home.router);
+app.use(routes_1.Mail.BASE_ROUTE, routes_1.Mail.router);
 app.listen(constants_1.PORT, () => {
     console.log(`PORT RUNNING ON ${constants_1.PORT} '_^`);
 });

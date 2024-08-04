@@ -1,10 +1,11 @@
 import express from "express";
-import { asyncHandler } from "src/middlewares";
+import { Mail } from "../../controllers";
+import { asyncHandler } from "../../middlewares";
 
 const router = express.Router();
 const BASE_ROUTE = "/mail";
 
-router.get("/sponsor", asyncHandler());
+router.post("/sponsor", asyncHandler(Mail.MailSponsor));
 
 const MODULE = {
 	router,

@@ -28,26 +28,36 @@ const config_1 = require("../../../config");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const MailSponsor = async (req, res) => {
-    const { description, subject, meta } = req.body;
+    const { body, subject, meta } = req.body;
     try {
-        config_1.ses.sendMail({
-            from: process.env.VERIFIED_EMAIL,
-            to: process.env.VERIFIED_EMAIL,
-            bcc: [],
-            subject,
-            html: `<html>
-				<head>
-					<title>${subject}</title>
-				</head>
-				<body>
-				// proccessed description
-				</body>
-			</html>`
+        const emailPromises = meta.map(async (values) => {
+            let modBody = body;
+            values.forEach((value, idx) => {
+                const placeholder = new RegExp(`\\$\\{${idx}\\}`, 'g');
+                modBody = modBody.replace(placeholder, value);
+            });
+            const data = {
+                from: process.env.VERIFIED_EMAIL,
+                to: values[0],
+                subject,
+                html: `
+					<html>
+					<head>
+						<title>${subject}</title>
+					</head>
+					<body>
+						${modBody}
+					</body>
+					</html>
+				`,
+            };
+            return config_1.ses.sendMail(data);
         });
-        return res.status(200).json({ status: "👍", message: "[Mail sponsor]: Mail sent succesfully" });
+        await Promise.all(emailPromises);
+        return res.status(200).json({ status: "👍", message: "[Mail sponsor]: Mail sent successfully" });
     }
     catch (err) {
-        return res.status(500).json({ status: "👎", message: "[Mail sponsor]: Internal Server Error", error: err });
+        return res.status(500).json({ status: "👎", message: "[Mail sponsor]: Internal Server Error", error: err.message });
     }
 };
 const Mail = {
