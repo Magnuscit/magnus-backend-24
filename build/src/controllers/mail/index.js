@@ -23,7 +23,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Mail = void 0;
 const config_1 = require("../../../config");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
@@ -60,8 +59,8 @@ const MailSponsor = async (req, res) => {
         return res.status(500).json({ status: "👎", message: "[Mail sponsor]: Internal Server Error", error: err.message });
     }
 };
-const Mail = {
+const MailControllers = {
     MailSponsor,
 };
-exports.Mail = Mail;
+exports.default = MailControllers;
 //# sourceMappingURL=index.js.map

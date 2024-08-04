@@ -45,8 +45,8 @@ const MailSponsor = async (req: Request, res: Response): Promise<Response> => {
 	}
 };
 
-const Mail = {
+const MailControllers = {
 	MailSponsor,
 };
 
-export { Mail };
+export default MailControllers;

@@ -1,14 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Home = void 0;
 const HomeMessage = async (_, res) => {
     return res.status(200).json({
         status: "👍",
         message: "Magnus'24 backend (^-^)",
     });
 };
-const Home = {
+const HomeControllers = {
     HomeMessage
 };
-exports.Home = Home;
+exports.default = HomeControllers;
 //# sourceMappingURL=index.js.map

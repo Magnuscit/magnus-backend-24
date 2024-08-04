@@ -9,7 +9,7 @@ const pool = new Pool({
 	host: process.env.DB_HOST || "localhost",
 	database: process.env.DB_NAME,
 	password: process.env.DB_PASS,
-	port: 5432,
+	port: 6543,
 	idleTimeoutMillis: 20000,
 	max: 10
 });

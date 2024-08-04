@@ -13,9 +13,11 @@ CREATE TABLE users (
     UNIQUE (email)
 );
 
+CREATE TYPE pass_type AS ENUM ("PAID", "FREE");
+
 CREATE TABLE pass (
-    id VARCHA(R(10) PRIMARY KEY,
-	name ENUM('PAID', 'FREE') DEFAULT 'FREE',
+    id VARCHAR((10) PRIMARY KEY,
+	type pass_type,
 	fee INTEGER DEFAULT 0
 );
 
@@ -38,6 +40,6 @@ CREATE TABLE users_events (
 );
 
 CREATE TABLE admin (
-    uname VARCHAR(10) PRIMARY KEY,
+    id VARCHAR(10) PRIMARY KEY,
     password VARCHAR
 );

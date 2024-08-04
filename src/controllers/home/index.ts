@@ -7,8 +7,8 @@ const HomeMessage = async (_: Request, res: Response) => {
 	})
 };
 
-const Home = {
+const HomeControllers = {
 	HomeMessage
 }
 
-export { Home };
+export default HomeControllers;
