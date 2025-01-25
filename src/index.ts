@@ -4,6 +4,9 @@ import { PORT } from "../config/constants";
 import { Home, Admin, Mail, Payment } from "./routes";
 import cookieParser from "cookie-parser";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 const app = express();
 
 const allowedOrigins = ["http://localhost:3000", "https://www.magnuscit.live"];

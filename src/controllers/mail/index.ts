@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { ses } from "../../../config";
-import * as dotenv from "dotenv";
-dotenv.config();
 
 type MailBody = {
   meta: Array<Array<string>>;
@@ -39,20 +37,16 @@ const MailSponsor = async (req: Request, res: Response): Promise<Response> => {
     });
 
     await Promise.all(emailPromises);
-    return res
-      .status(200)
-      .json({
-        status: "👍",
-        message: "[Mail sponsor]: Mail sent successfully",
-      });
+    return res.status(200).json({
+      status: "👍",
+      message: "[Mail sponsor]: Mail sent successfully",
+    });
   } catch (err) {
-    return res
-      .status(500)
-      .json({
-        status: "👎",
-        message: "[Mail sponsor]: Internal Server Error",
-        error: err.message,
-      });
+    return res.status(500).json({
+      status: "👎",
+      message: "[Mail sponsor]: Internal Server Error",
+      error: err.message,
+    });
   }
 };
 

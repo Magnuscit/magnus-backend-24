@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { db, razorpay } from "../../../config";
 import { Payment } from "../../queries";
 import pgFormat from "pg-format";
+import Razorpay from "razorpay";
 
 const CURRENCY = "INR";
 
@@ -57,6 +58,14 @@ const verifyPayment = async (
 };
 
 const webhook = async (req: Request, res: Response): Promise<Response> => {
+  let isAuthorizedHit = Razorpay.validateWebhookSignature(
+    JSON.stringify(req.body),
+    req.headers["x-razorpay-signature"] as string,
+    process.env.RAZORPAY_WEBHOOK_SECRET || "",
+  );
+  if (!isAuthorizedHit) {
+    return res.status(401).json({ error: "fuck off, malicious actor" });
+  }
   const { event, payload, created_at } = req.body;
   if (event == "payment.captured") {
     const {
@@ -66,7 +75,7 @@ const webhook = async (req: Request, res: Response): Promise<Response> => {
     } = payload.payment.entity;
     const client = await db.connect();
     try {
-      const PAID = true;
+      const paid = true;
       const paymentInsertion = await client.query(Payment.insertPayment, [
         payment_id,
         new Date(created_at * 1000),
@@ -77,7 +86,7 @@ const webhook = async (req: Request, res: Response): Promise<Response> => {
         event.trim(),
         user_email,
         payment_id,
-        PAID,
+        paid,
       ]);
       const query = pgFormat(Payment.insertUserEvents, userEventsData);
       const userEventInsertion = await client.query(query);
@@ -94,7 +103,7 @@ const webhook = async (req: Request, res: Response): Promise<Response> => {
     }
     console.log(payment_id, user_email, events);
 
-    // we might want to send the email to the user here instead of keeping an endpoint
+    // we might want to send the email to the user here :)
   }
   return res.status(200).json({ status: "👍", message: "Webhook received" });
 };
