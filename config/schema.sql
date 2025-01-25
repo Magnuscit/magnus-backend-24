@@ -13,10 +13,15 @@ CREATE TABLE users (
     UNIQUE (email)
 );
 
-CREATE TYPE pass_type AS ENUM ("PAID", "FREE");
+CREATE TYPE pass_type AS ENUM ('PAID', 'FREE');
+
+CREATE TABLE payments (
+  id VARCHAR(100) PRIMARY KEY,
+  created_at TIMESTAMPTZ
+);
 
 CREATE TABLE pass (
-    id VARCHAR((10) PRIMARY KEY,
+  id VARCHAR(10) PRIMARY KEY,
 	type pass_type,
 	fee INTEGER DEFAULT 0
 );
@@ -24,7 +29,7 @@ CREATE TABLE pass (
 CREATE TABLE events (
     id VARCHAR(10) PRIMARY KEY,
     name VARCHAR(100),
-    password VARCHAR,
+    password TEXT,
     pass_id VARCHAR(10),
     FOREIGN KEY (pass_id) REFERENCES pass(id)
 );
@@ -34,8 +39,10 @@ CREATE TABLE users_events (
     user_email VARCHAR,
     present BOOLEAN DEFAULT false,
     paid BOOLEAN DEFAULT false,
+    payment_id VARCHAR,
     FOREIGN KEY (event_id) REFERENCES events(id),
     FOREIGN KEY (user_email) REFERENCES users(email),
+    FOREIGN KEY (payment_id) REFERENCES payments(id),
     PRIMARY KEY (event_id, user_email)
 );
 
