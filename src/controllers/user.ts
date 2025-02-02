@@ -6,7 +6,7 @@ import { User } from "../queries";
 import { sendRegistrationEmail } from "../templates/mail";
 
 const getUser = async (req: Request, res: Response): Promise<Response> => {
-  const email = req.user.email;
+  const email = req.user?.email;
   const client = await db.connect();
   try {
     const userCheck = await client.query(User.getUser, [email]);
@@ -38,7 +38,7 @@ const isUserFullyRegistered = async (
   req: Request,
   res: Response,
 ): Promise<Response> => {
-  const email = req.user.email;
+  const email = req.user?.email;
   const client = await db.connect();
   try {
     const doesUserFullyRegistered = await client.query(
@@ -72,11 +72,11 @@ const updateUserData = async (
   res: Response,
 ): Promise<Response> => {
   const { name, phone_no, clg_name } = req.body;
-  const email = req.user.email;
+  const email = req.user?.email;
   const client = await db.connect();
   try {
     await client.query(User.updateUser, [name, clg_name, phone_no, email]);
-    await sendRegistrationEmail(name, email);
+    await sendRegistrationEmail(name, email as string);
     return res.status(200).json({
       status: "👍",
     });

@@ -4,13 +4,13 @@ import { db, razorpay } from "../../config";
 import { Event, User, Payment } from "../queries";
 import Razorpay from "razorpay";
 import { sendBoardingPass } from "../templates/mail";
-import format from "pg-format";
+// import format from "pg-format";
 
 const CURRENCY = "INR";
 
 const createOrder = async (req: Request, res: Response): Promise<Response> => {
   const { amount, receipt, notes } = req.body;
-  const email = req.user.email;
+  const email = req.user?.email;
   const client = await db.connect();
   try {
     const doesUserExist = await client.query(User.doesUserExists, [email]);

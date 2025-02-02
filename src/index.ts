@@ -13,9 +13,7 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = ["http://localhost:3000", "https://www.magnuscit.live"];
-
-const allowedOrgins = [
+const allowedOrigins = [
   "domain.com",
   "http://127.0.0.1:5173",
   "http://127.0.0.1:3000",
@@ -28,31 +26,19 @@ const allowedOrgins = [
 ];
 
 const corsOptions: CorsOptions = {
-  // origin(requestOrigin, callback) {
-  //   if (!requestOrigin || allowedOrgins.indexOf(requestOrigin) !== -1) {
-  //     callback(null, requestOrigin);
-  //   } else {
-  //     callback(new Error("Not allowed by CORS"));
-  //   }
-  // },
-  origin: allowedOrgins,
+  origin: allowedOrigins,
   optionsSuccessStatus: 200,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
 };
 
 const credentials = (req: Request, res: Response, next: NextFunction) => {
   const origin = req.headers.origin;
-  if (origin && allowedOrgins.includes(origin)) {
+  if (origin && allowedOrigins.includes(origin)) {
     res.setHeader("Access-Control-Allow-Credentials", "true");
   }
   next();
 };
-
-// const corsOptions = {
-//   origin: allowedOrigins,
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   credentials: true,
-//   optionsSuccessStatus: 204,
-// };
 
 app.use(credentials);
 app.use(cors(corsOptions));
