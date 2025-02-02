@@ -3,14 +3,14 @@ const insertPayment = `
   VALUES ($1, $2)
 `;
 
-const insertUserEvents = `
-  INSERT INTO users_events (event_id, user_email, payment_id, paid)
-  VALUES %L
+const insertUserEvent = `
+  INSERT INTO users_events (event_id, user_email, payment_id)
+  VALUES ($1, $2, $3);
 `;
 
 const PaymentQueries = {
   insertPayment,
-  insertUserEvents,
+  insertUserEvent,
 };
 
 export default PaymentQueries;

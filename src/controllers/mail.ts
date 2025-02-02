@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { ses } from "../../../config";
+import { ses } from "../../config";
 
-type MailBody = {
+interface MailBody {
   meta: Array<Array<string>>;
   body: string;
   subject: string;
-};
+}
 
 const MailSponsor = async (req: Request, res: Response): Promise<Response> => {
   const { body, subject, meta }: MailBody = req.body;
@@ -19,7 +19,7 @@ const MailSponsor = async (req: Request, res: Response): Promise<Response> => {
       });
 
       const data = {
-        from: process.env.VERIFIED_EMAIL,
+        from: process.env.SES_VERIFIED_EMAIL,
         to: values[0],
         subject,
         html: `

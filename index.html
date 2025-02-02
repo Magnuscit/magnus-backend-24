@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Razorpay Checkout</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  </head>
+  <body>
+    <button id="pay-button">Pay Now</button>
+
+    <script>
+      document.getElementById("pay-button").onclick = async function () {
+        try {
+          const response = await fetch(
+            "http://localhost:6969/payment/createOrder",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                amount: 100, // in paise, here 100 equals 1 rupee
+                receipt: "receipt#2",
+                notes: {
+                  eventId: "LIFE",
+                  team_members: [
+                    {
+                      email: "dd@gmail.com",
+                      phone_no: 3141414434143,
+                      clg_name: "STANFORD",
+                    },
+                    {
+                      email: "mk@gmail.com",
+                      phone_no: 23434144324,
+                      clg_name: "MIT",
+                    },
+                  ],
+                },
+              }),
+            },
+          );
+
+          const data = await response.json();
+          if (data.status === "👍") {
+            const order = data.order; // Order details from backend
+            openRazorpayCheckout(order); // this would launch the paymet gateway popup
+          } else {
+            alert("Failed to create order: " + data.message);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred. Please try again.");
+        }
+      };
+
+      function openRazorpayCheckout(order) {
+        const options = {
+          key: "rzp_test_848ON8J0jU2COQ", // Replace with your Razorpay Key ID, put this in .env
+          amount: order.amount, // Amount in paise (e.g., 100 INR = 10000 paise)
+          currency: "INR",
+          name: "Magnus",
+          description: "Test Payment",
+          order_id: order.id, // Order ID from backend
+          handler: function (response) {
+            // this handler function would run after the payment is successfull
+            console.log("Payment successful:", response);
+            alert(
+              "Payment successful! Payment ID: " + response.razorpay_payment_id,
+            );
+
+            // Verify payment on your backend, with the given response
+            verifyPayment(response);
+          },
+          prefill: {
+            // get the below information by calling the /user/get endpoint
+            name: "Lovelin Dhoni", // Prefill customer name
+            email: "lovelindhonijb.aiml2023@citchennai.net", // Prefill customer email
+            contact: "7200850960", // Prefill customer phone number
+          },
+          theme: {
+            color: "#3399cc", // Customize the modal theme
+          },
+        };
+
+        const rzp = new Razorpay(options);
+        rzp.open();
+      }
+
+      async function verifyPayment(response) {
+        try {
+          const verificationResponse = await fetch(
+            "http://localhost:6969/payment/verify",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                order_id: response.razorpay_order_id,
+                payment_id: response.razorpay_payment_id,
+                signature: response.razorpay_signature,
+              }),
+            },
+          );
+
+          const verificationData = await verificationResponse.json();
+          if (verificationData.status === "👍") {
+            alert("Payment verified successfully!");
+          } else {
+            alert("Payment verification failed: " + verificationData.message);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("An error occurred during payment verification.");
+        }
+      }
+    </script>
+  </body>
+</html>

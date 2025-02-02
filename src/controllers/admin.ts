@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { db } from "../../../config";
-import { Admin } from "../../queries";
+import { db } from "../../config";
+import { Admin } from "../queries";
 import jwt from "jsonwebtoken";
 
 const AdminLogin = async (req: Request, res: Response) => {
@@ -27,13 +27,11 @@ const AdminLogin = async (req: Request, res: Response) => {
       secure: true,
       sameSite: "none",
     });
-    return res
-      .status(200)
-      .json({
-        status: "👍",
-        message: "[Admin Login]: Admin logged in",
-        data: { token },
-      });
+    return res.status(200).json({
+      status: "👍",
+      message: "[Admin Login]: Admin logged in",
+      data: { token },
+    });
   } finally {
     client.release();
   }
@@ -65,13 +63,11 @@ const AdminVerify = async (req: Request, res: Response) => {
             .status(404)
             .json({ status: "👎", message: "[Admin Verify]: Admin not found" });
         }
-        return res
-          .status(200)
-          .json({
-            status: "👍",
-            message: "[Admin Verify]: Admin verified",
-            data: { decoded },
-          });
+        return res.status(200).json({
+          status: "👍",
+          message: "[Admin Verify]: Admin verified",
+          data: { decoded },
+        });
       } finally {
         client.release();
       }

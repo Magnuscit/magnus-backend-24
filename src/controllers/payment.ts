@@ -1,14 +1,29 @@
 import { Request, Response } from "express";
 import crypto from "crypto";
-import { db, razorpay } from "../../../config";
-import { Payment } from "../../queries";
-import pgFormat from "pg-format";
+import { db, razorpay } from "../../config";
+import { Event, User, Payment } from "../queries";
 import Razorpay from "razorpay";
+import { sendBoardingPass } from "../templates/mail";
+import format from "pg-format";
 
 const CURRENCY = "INR";
 
 const createOrder = async (req: Request, res: Response): Promise<Response> => {
   const { amount, receipt, notes } = req.body;
+  const email = req.user.email;
+  const client = await db.connect();
+  try {
+    const doesUserExist = await client.query(User.doesUserExists, [email]);
+    if (doesUserExist.rows.length == 0) {
+      return res.status(500).json({
+        status: "👎",
+        message: "Failed to create order, no user with the given email exists",
+      });
+    }
+  } catch (e) {
+  } finally {
+    client.release();
+  }
   try {
     const options = {
       amount: amount, // should be in paise
@@ -43,11 +58,10 @@ const verifyPayment = async (
       return res
         .status(200)
         .json({ status: "👍", message: "Payment verified successfully" });
-    } else {
-      return res
-        .status(400)
-        .json({ status: "👎", message: "Invalid payment signature" });
     }
+    return res
+      .status(400)
+      .json({ status: "👎", message: "Invalid payment signature" });
   } catch (err) {
     return res.status(500).json({
       status: "👎",
@@ -70,27 +84,49 @@ const webhook = async (req: Request, res: Response): Promise<Response> => {
   if (event == "payment.captured") {
     const {
       id: payment_id,
-      email: user_email,
-      notes: events,
+      email: userEmail,
+      notes: event,
     } = payload.payment.entity;
     const client = await db.connect();
     try {
-      const paid = true;
+      // we need to handle idempotency
       const paymentInsertion = await client.query(Payment.insertPayment, [
         payment_id,
         new Date(created_at * 1000),
       ]);
       console.log(paymentInsertion);
 
-      const userEventsData = events.map((event: string) => [
-        event.trim(),
-        user_email,
+      const { eventId, team_members } = event;
+
+      const insertUserEvent = await client.query(Payment.insertUserEvent, [
+        eventId,
+        userEmail,
         payment_id,
-        paid,
       ]);
-      const query = pgFormat(Payment.insertUserEvents, userEventsData);
-      const userEventInsertion = await client.query(query);
-      console.log(userEventInsertion);
+      console.log(insertUserEvent);
+
+      if (team_members.length > 0) {
+        const team_member_data = team_members.map((member: any) => [
+          member.email,
+          member.clgName,
+          member.phoneNo,
+          eventId,
+          userEmail,
+        ]);
+        await client.query(format(Event.addTeamMembers, team_member_data));
+      }
+
+      const userClg = await client.query(User.getUserClg, [userEmail]);
+      const eventName = await client.query(Event.fetchEventName, [eventId]);
+
+      // send boarding pass email
+      await sendBoardingPass(
+        userEmail,
+        userClg.rows[0].clg_name as string,
+        eventName.rows[0].name,
+      );
+
+      // might as well send mail to team members too
     } catch (err) {
       console.error("Errrrr at webhook:", err);
       return res.status(500).json({
@@ -101,9 +137,7 @@ const webhook = async (req: Request, res: Response): Promise<Response> => {
     } finally {
       client.release();
     }
-    console.log(payment_id, user_email, events);
-
-    // we might want to send the email to the user here :)
+    // console.log(payment_id, userEmail, events);
   }
   return res.status(200).json({ status: "👍", message: "Webhook received" });
 };
