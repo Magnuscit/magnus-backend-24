@@ -131,7 +131,7 @@ const sendBoardingPass = async (
 
 const sendRegistrationEmail = async (name: string, email: string) => {
   const data = {
-    from: process.env.VERIFIED_EMAIL,
+    from: process.env.SES_VERIFIED_EMAIL,
     to: email,
     subject: "Your Registration Confirmation for Magnus 2025",
     html: `
