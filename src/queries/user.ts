@@ -17,19 +17,15 @@ const doesUserFullyRegister = `SELECT EXISTS (
 ) AS has_null`;
 
 const getUser = `
-SELECT 
-    u.name,
-    u.phone_no,
-    u.clg_name,
-    COALESCE(ARRAY_AGG(ue.event_id), '{}'::text[]) AS event_id
-FROM 
-    users u
-LEFT JOIN 
-    users_events ue ON u.email = ue.user_email
-WHERE 
-    u.email = $1
-GROUP BY 
-    u.name, u.phone_no, u.clg_name;    `;
+    SELECT 
+        u.name, 
+        u.phone_no, 
+        u.clg_name,
+        COALESCE(array_agg(ue.event_id) FILTER (WHERE ue.event_id IS NOT NULL), '{}') event_id
+    FROM users u
+    LEFT JOIN users_events ue ON u.email = ue.user_email
+    WHERE u.email = $1
+    GROUP BY u.name, u.phone_no, u.clg_name;`;
 
 const UserQueries = {
   getUser,
