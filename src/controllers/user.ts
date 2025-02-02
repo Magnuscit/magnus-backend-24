@@ -116,43 +116,18 @@ const login = async (req: Request, res: Response): Promise<Response> => {
       expiresIn: "72h",
     });
     console.log(jwtToken);
-    res.cookie("jwt", jwtToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      maxAge: 3 * 24 * 60 * 60 * 1000,
-    });
 
     return res.status(200).json({
       status: "👍",
+      jwt: jwtToken,
       message: "successfully logged in",
     });
   } catch (e) {
     console.error(e);
     return res.status(500).json({
       status: "👎",
+      jwt: null,
       message: "Error occured when signing in",
-    });
-  }
-};
-
-const logout = async (_req: Request, res: Response): Promise<Response> => {
-  try {
-    res.clearCookie("jwt", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    });
-    console.log("logouted");
-    return res.status(200).json({
-      status: "👍",
-      message: "Successfully logged out",
-    });
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({
-      status: "👎",
-      message: "Error occurred when logging out",
     });
   }
 };
@@ -161,7 +136,6 @@ const UserControllers = {
   getUser,
   updateUserData,
   login,
-  logout,
   isUserFullyRegistered,
 };
 export default UserControllers;

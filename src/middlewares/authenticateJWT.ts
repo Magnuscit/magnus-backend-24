@@ -7,9 +7,16 @@ const authenticateJWT = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(req.cookies);
-  const token = req.cookies?.jwt;
-  console.log(token);
+  console.log(req.headers);
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized: No Authorization header" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  console.log("JWT TOKEN", token);
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
@@ -26,5 +33,4 @@ const authenticateJWT = async (
     next();
   });
 };
-
 export default authenticateJWT;

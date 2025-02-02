@@ -13,7 +13,6 @@ router.get(
 );
 router.post("/updateUser", authenticateJWT, asyncHandler(User.updateUserData));
 
-router.get("/logout", asyncHandler(User.logout));
 router.post("/login", asyncHandler(User.login));
 
 const MODULE = {
