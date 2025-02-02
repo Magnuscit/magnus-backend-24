@@ -47,11 +47,11 @@ const isUserFullyRegistered = async (
     );
     if (doesUserFullyRegistered.rows[0].has_null) {
       return res.status(200).json({
-        status: "👍",
+        status: "notok",
       });
     } else {
       return res.status(200).json({
-        status: "👎",
+        status: "ok",
       });
     }
   } catch (e) {
@@ -120,6 +120,7 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     return res.status(200).json({
       status: "👍",
       jwt: jwtToken,
+      data: profile,
       message: "successfully logged in",
     });
   } catch (e) {

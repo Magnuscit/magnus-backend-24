@@ -4,7 +4,7 @@ const doesUserExists = "SELECT * FROM users WHERE email = $1;";
 
 const addUser = "INSERT INTO users (email) VALUES ($1);";
 const updateUser = `
-UPDATE your_table
+UPDATE users 
 SET name = $1, 
     clg_name = $2, 
     phone_no = $3
