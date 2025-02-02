@@ -25,16 +25,16 @@ CREATE TABLE events (
     fee INTEGER DEFAULT 0
 );
 
-CREATE TABLE team_members (
-  email VARCHAR(50),
-  clg_name VARCHAR(100),
-  phone_no VARCHAR(20),
-  event_id VARCHAR,
-  team_leader_email VARCHAR,
-  FOREIGN KEY(event_id) REFERENCES events(id),
-  FOREIGN KEY(team_leader_email) REFERENCES users(email),
-  PRIMARY KEY (email, event_id, team_leader_email)
-);
+-- CREATE TABLE team_members (
+--   email VARCHAR(50),
+--   clg_name VARCHAR(100),
+--   phone_no VARCHAR(20),
+--   event_id VARCHAR,
+--   team_leader_email VARCHAR,
+--   FOREIGN KEY(event_id) REFERENCES events(id),
+--   FOREIGN KEY(team_leader_email) REFERENCES users(email),
+--   PRIMARY KEY (email, event_id, team_leader_email)
+-- );
 
 CREATE TABLE users_events (
     event_id VARCHAR,

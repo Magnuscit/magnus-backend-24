@@ -17,46 +17,19 @@ const doesUserFullyRegister = `SELECT EXISTS (
 ) AS has_null`;
 
 const getUser = `
-      WITH user_basic AS (
-        SELECT 
-          u.name,
-          u.clg_name,
-          u.phone_no,
-          u.email
-        FROM users u
-        WHERE u.email = $1
-      ),
-      event_details AS (
-        SELECT 
-          ue.event_id,
-          json_agg(
-            json_build_object(
-              'email', tm.email,
-              'clg_name', tm.clg_name,
-              'phone_no', tm.phone_no
-            )
-          ) FILTER (WHERE tm.email IS NOT NULL) as team_members
-        FROM users_events ue
-        LEFT JOIN team_members tm ON tm.event_id = ue.event_id 
-          AND tm.team_leader_email = ue.user_email
-        WHERE ue.user_email = $1
-        GROUP BY ue.event_id
-      )
-      SELECT 
-        ub.*,
-        COALESCE(
-          json_agg(
-            json_build_object(
-              'event_id', ed.event_id,
-              'team_members', COALESCE(ed.team_members, '[]'::json)
-            )
-          ) FILTER (WHERE ed.event_id IS NOT NULL),
-          '[]'::json
-        ) as events
-      FROM user_basic ub
-      LEFT JOIN event_details ed ON 1=1
-      GROUP BY ub.name, ub.clg_name, ub.phone_no, ub.email
-    `;
+SELECT 
+    u.name,
+    u.phone_no,
+    u.clg_name,
+    COALESCE(ARRAY_AGG(ue.event_id), '{}'::text[]) AS event_id
+FROM 
+    users u
+LEFT JOIN 
+    users_events ue ON u.email = ue.user_email
+WHERE 
+    u.email = $1
+GROUP BY 
+    u.name, u.phone_no, u.clg_name;    `;
 
 const UserQueries = {
   getUser,

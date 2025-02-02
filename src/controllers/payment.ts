@@ -96,7 +96,7 @@ const webhook = async (req: Request, res: Response): Promise<Response> => {
       ]);
       console.log(paymentInsertion);
 
-      const { eventId, team_members } = event;
+      const { eventId } = event;
 
       const insertUserEvent = await client.query(Payment.insertUserEvent, [
         eventId,
@@ -105,16 +105,16 @@ const webhook = async (req: Request, res: Response): Promise<Response> => {
       ]);
       console.log(insertUserEvent);
 
-      if (team_members.length > 0) {
-        const team_member_data = team_members.map((member: any) => [
-          member.email,
-          member.clgName,
-          member.phoneNo,
-          eventId,
-          userEmail,
-        ]);
-        await client.query(format(Event.addTeamMembers, team_member_data));
-      }
+      // if (team_members.length > 0) {
+      //   const team_member_data = team_members.map((member: any) => [
+      //     member.email,
+      //     member.clgName,
+      //     member.phoneNo,
+      //     eventId,
+      //     userEmail,
+      //   ]);
+      //   await client.query(format(Event.addTeamMembers, team_member_data));
+      // }
 
       const userClg = await client.query(User.getUserClg, [userEmail]);
       const eventName = await client.query(Event.fetchEventName, [eventId]);
