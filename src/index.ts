@@ -55,6 +55,6 @@ app.use(Payment.BASE_ROUTE, Payment.router);
 app.use(User.BASE_ROUTE, User.router);
 app.use(Event.BASE_ROUTE, Event.router);
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(`PORT RUNNING ON ${PORT} '_^`);
 });

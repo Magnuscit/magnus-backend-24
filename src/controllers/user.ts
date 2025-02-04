@@ -111,11 +111,10 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     } else {
       console.log("User already exists");
     }
-
     const jwtToken = jwt.sign({ email }, process.env.JWT_SECRET as string, {
       expiresIn: "72h",
     });
-    console.log(jwtToken);
+    console.log("Yooooo", jwtToken);
 
     return res.status(200).json({
       status: "👍",

@@ -14,7 +14,7 @@ INSERT INTO events (id, name, password, fee)
 VALUES ('CODE', 'Codeuphoria', 'killerqueen', 150);
 
 INSERT INTO events (id, name, password, fee) 
-VALUES ('NETVEN', 'Netventure', 'goldexperience', 1000000);
+VALUES ('NETVEN', 'Netventure', 'goldexperience', 100);
 
 INSERT INTO events (id, name, password, fee) 
 VALUES ('PIXEL', 'PromptPixel', 'stickyfingers', 100);
@@ -35,19 +35,19 @@ INSERT INTO events (id, name, password, fee)
 VALUES ('FBALL', 'E-Football', 'kingcrimson', 100);
 
 INSERT INTO events (id, name, password, fee) 
-VALUES ('EXPO', 'ExpoSure', 'silverchariot', 150);
+VALUES ('EXPO', 'ExpoSure', 'silverchariot', 50);
 
 INSERT INTO events (id, name, password, fee) 
-VALUES ('LIFE', 'Life of words', 'hermitpurple', 250);
+VALUES ('LIFE', 'Life of words', 'hermitpurple', 50);
 
 INSERT INTO events (id, name, password, fee) 
-VALUES ('CLOUD', 'Cloud Security', 'kiss', 250);
+VALUES ('CLOUD', 'Cloud Security', 'kiss', 200);
 
 INSERT INTO events (id, name, password, fee) 
-VALUES ('RAG', 'Mastering RAG', 'greenday', 250);
+VALUES ('RAG', 'Mastering RAG', 'greenday', 150);
 
 INSERT INTO events (id, name, password, fee) 
-VALUES ('BLOCK', 'Smart Contract Development', 'thehand', 250);
+VALUES ('BLOCK', 'Blockchain Development', 'thehand', 150);
 
 -- sample users
 INSERT INTO users (name, email, clg_name, phone_no) 

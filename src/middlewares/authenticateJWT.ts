@@ -7,7 +7,6 @@ const authenticateJWT = async (
   res: Response,
   next: NextFunction,
 ) => {
-  console.log(req.headers);
   const authHeader = req.headers["authorization"];
   if (!authHeader) {
     return res
@@ -16,17 +15,16 @@ const authenticateJWT = async (
   }
 
   const token = authHeader.split(" ")[1];
-  console.log("JWT TOKEN", token);
   if (!token) {
     return res.status(401).json({ message: "Unauthorized: No token provided" });
   }
 
   //@ts-ignore
   jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
+    console.log(err);
     if (err || !decoded) {
       return res.status(401).json({ message: "Forbidden: Invalid token" });
     }
-
     //@ts-ignore
     req.user = { email: (decoded as { email: string }).email };
 
