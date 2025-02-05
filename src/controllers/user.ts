@@ -101,9 +101,7 @@ const login = async (req: Request, res: Response): Promise<Response> => {
         headers: { Authorization: `Bearer ${token}` },
       },
     );
-    console.log(profile);
     const { email } = profile;
-    console.log(email);
 
     const checkUserExistence = await client.query(User.doesUserExists, [email]);
     if (checkUserExistence.rows.length == 0) {
@@ -114,7 +112,6 @@ const login = async (req: Request, res: Response): Promise<Response> => {
     const jwtToken = jwt.sign({ email }, process.env.JWT_SECRET as string, {
       expiresIn: "72h",
     });
-    console.log("Yooooo", jwtToken);
 
     return res.status(200).json({
       status: "👍",
